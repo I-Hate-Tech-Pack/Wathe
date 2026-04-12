@@ -1,6 +1,8 @@
 package dev.doctor4t.wathe.game;
 
 import com.google.common.collect.Lists;
+
+import cn.howxu.WatheServerConfig;
 import dev.doctor4t.wathe.Wathe;
 import dev.doctor4t.wathe.api.GameMode;
 import dev.doctor4t.wathe.api.MapEffect;
@@ -140,10 +142,13 @@ public class GameFunctions {
         }
 
         // teleport players to play area
-        for (ServerPlayerEntity player : players) {
-            player.changeGameMode(net.minecraft.world.GameMode.ADVENTURE);
-            Vec3d pos = player.getPos().add(Vec3d.of(areas.getPlayAreaOffset()));
-            player.requestTeleport(pos.getX(), pos.getY() + 1, pos.getZ());
+        if (!WatheServerConfig.enableRoomTeleport) {
+            // do not need anymore, just teleport to room
+            for (ServerPlayerEntity player : players) {
+                player.changeGameMode(net.minecraft.world.GameMode.ADVENTURE);
+                Vec3d pos = player.getPos().add(Vec3d.of(areas.getPlayAreaOffset()));
+                player.requestTeleport(pos.getX(), pos.getY() + 1, pos.getZ());
+            }
         }
 
         // teleport non playing players

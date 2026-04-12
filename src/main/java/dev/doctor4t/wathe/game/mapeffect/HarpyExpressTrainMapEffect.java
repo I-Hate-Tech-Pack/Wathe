@@ -4,6 +4,7 @@ import dev.doctor4t.wathe.api.MapEffect;
 import dev.doctor4t.wathe.api.WatheMapEffects;
 import dev.doctor4t.wathe.cca.GameWorldComponent;
 import dev.doctor4t.wathe.cca.TrainWorldComponent;
+import dev.doctor4t.wathe.game.GameFunctions;
 import dev.doctor4t.wathe.index.WatheItems;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
@@ -13,11 +14,15 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.UnaryOperator;
+
+import cn.howxu.WatheServerConfig;
 
 public abstract class HarpyExpressTrainMapEffect extends MapEffect {
     public HarpyExpressTrainMapEffect(Identifier identifier) {
@@ -42,6 +47,21 @@ public abstract class HarpyExpressTrainMapEffect extends MapEffect {
             int finalRoomNumber = roomNumber;
             itemStack.apply(DataComponentTypes.LORE, LoreComponent.DEFAULT, component -> new LoreComponent(Text.literal("Room " + finalRoomNumber).getWithStyle(Style.EMPTY.withItalic(false).withColor(0xFF8C00))));
             serverPlayerEntity.giveItemStack(itemStack);
+            // This judege the room number and the player
+            // Just Put serverPlayerEntity in the Map We need
+            var roomData = WatheServerConfig.RoomPositions.get(roomNumber);
+            // 简单的空值判定 0 means disable config control
+            if (WatheServerConfig.enableRoomTeleport && roomData != null && roomData.i1() != 0) {
+                // plus one for block location
+                // teleport
+                serverPlayerEntity.teleport(
+                        (ServerWorld) serverPlayerEntity.getWorld(),
+                        roomData.f1() + 0.5,
+                        roomData.f2() + 0.5,
+                        roomData.f3() + 0.5,
+                        serverPlayerEntity.getYaw(),
+                        serverPlayerEntity.getPitch());
+            }
 
             // give letter
             ItemStack letter = new ItemStack(WatheItems.LETTER);

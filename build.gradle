@@ -21,6 +21,10 @@ chenille {
 repositories {
 	mavenLocal()
 
+	maven {
+        url "https://cursemaven.com"
+    }
+
     maven {
         name "Modrinth"
         url "https://api.modrinth.com/maven"
@@ -48,7 +52,11 @@ repositories {
 	maven {
         url "https://maven.maxhenkel.de/repository/public"
     }
+
+
 }
+
+
 
 loom {
 	accessWidenerPath = file("src/main/resources/wathe.accesswidener")
@@ -92,6 +100,9 @@ dependencies {
 	modImplementation "maven.modrinth:iris:${iris_version}-fabric"
 	modRuntimeOnly("org.anarres:jcpp:${jcpp_version}")
 	modImplementation("io.github.douira:glsl-transformer:${glslTransformer_version}")
+
+	// Testmod
+	modRuntimeOnly "curse.maven:carpet-349239:5425253"
 }
 
 processResources {
@@ -114,6 +125,7 @@ java {
 
 	sourceCompatibility = JavaVersion.VERSION_21
 	targetCompatibility = JavaVersion.VERSION_21
+	toolchain.languageVersion = JavaLanguageVersion.of(21)
 }
 
 jar {

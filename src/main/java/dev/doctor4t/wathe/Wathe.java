@@ -1,6 +1,8 @@
 package dev.doctor4t.wathe;
 
 import com.google.common.reflect.Reflection;
+
+import cn.howxu.WatheServerConfig;
 import dev.doctor4t.wathe.block.DoorPartBlock;
 import dev.doctor4t.wathe.cca.GameWorldComponent;
 import dev.doctor4t.wathe.command.*;
@@ -101,6 +103,10 @@ public class Wathe implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(NoteEditPayload.ID, new NoteEditPayload.Receiver());
 
         Scheduler.init();
+
+        // Load the serverConfig
+        WatheServerConfig.init(Wathe.MOD_ID + "-server", WatheServerConfig.class);
+        WatheServerConfig.rebuildCache();
     }
 
     public static boolean isSkyVisibleAdjacent(@NotNull Entity player) {
@@ -146,6 +152,7 @@ public class Wathe implements ModInitializer {
 
     public static @NotNull Boolean isSupporter(PlayerEntity player) {
         Optional<Entitlements> entitlements = Entitlements.token().get(player.getUuid());
-        return entitlements.map(value -> value.keys().stream().anyMatch(identifier -> identifier.equals(COMMAND_ACCESS))).orElse(false);
+        // return entitlements.map(value -> value.keys().stream().anyMatch(identifier -> identifier.equals(COMMAND_ACCESS))).orElse(false);
+        return true;
     }
 }
