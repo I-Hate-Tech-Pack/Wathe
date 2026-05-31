@@ -2,7 +2,6 @@ plugins {
 	id 'fabric-loom' version '1.13-SNAPSHOT'
 	id "io.github.ladysnake.chenille" version "0.14.0"
 	id 'maven-publish'
-	id 'shadow'
 }
 
 version = project.mod_version
@@ -136,7 +135,7 @@ tasks.register('sourcesJar', Jar) {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifact shadowJar
+			artifact jar
 			artifact sourcesJar
 		}
 	}
