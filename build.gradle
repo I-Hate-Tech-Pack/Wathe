@@ -1,6 +1,8 @@
 plugins {
 	id 'fabric-loom' version '1.13-SNAPSHOT'
 	id "io.github.ladysnake.chenille" version "0.14.0"
+	id 'maven-publish'
+	id 'shadow'
 }
 
 version = project.mod_version
@@ -8,14 +10,6 @@ group = project.maven_group
 
 base {
 	archivesName = project.archives_base_name
-}
-
-chenille {
-	configurePublishing {
-		withLadysnakeMaven()
-		withGithubRelease()
-		withModrinthRelease()
-	}
 }
 
 repositories {
@@ -131,5 +125,29 @@ java {
 jar {
 	from("LICENSE") {
 		rename { "${it}_${project.base.archivesName.get()}"}
+	}
+}
+
+tasks.register('sourcesJar', Jar) {
+	archiveClassifier = 'sources'
+	from sourceSets.main.allJava
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifact shadowJar
+			artifact sourcesJar
+		}
+	}
+	repositories {
+		maven {
+			name = "HowXu"
+			url = uri("https://maven.howxu.cn/")
+			credentials {
+				username = System.getenv("MAVEN_USERNAME")
+				password = System.getenv("MAVEN_PASSWORD")
+			}
+		}
 	}
 }
